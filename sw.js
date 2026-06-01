@@ -1,5 +1,5 @@
 /* Soroban Sensei — offline service worker (cache-first). Only active when served over http(s). */
-const CACHE = 'soroban-sensei-v1';
+const CACHE = 'soroban-sensei-v2';
 const CORE = [
   './',
   './index.html',
