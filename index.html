@@ -484,6 +484,7 @@ Built to feel like a complete practice session, not a loose pile of drills. One 
 <span id="pbBadge" class="pb-badge hidden">PB</span>
 <span class="version" id="buildBadge">v6.2.0</span>
 <a class="support-link hidden" id="supportHeader" href="#" target="_blank" rel="noopener" title="Support this project on Ko-fi" style="color:#000;background:linear-gradient(135deg,var(--gold),#ff9800);font-weight:700;font-size:.8rem;padding:5px 12px;border-radius:999px;text-decoration:none;white-space:nowrap">&#x2764; Tip</a>
+<a class="feedback-link hidden" id="feedbackHeader" href="#" title="Email feedback to the developer" style="color:var(--ink2);border:1px solid var(--ring2);font-weight:600;font-size:.8rem;padding:5px 12px;border-radius:999px;text-decoration:none;white-space:nowrap">&#x1F4AC; Feedback</a>
 <button class="btn btn-sm" id="helpBtn" title="How to use" style="font-size:.85rem;padding:4px 10px;border-radius:999px">?</button>
 </div>
 </div>
@@ -955,6 +956,9 @@ Select a level above to see details.
 <div class="flex gap-xs wrap">
 <button class="btn" id="practiceMissBtn">Practice Missed Set</button>
 <a class="btn btn-gold support-link hidden" id="supportSummary" href="#" target="_blank" rel="noopener">&#x2764; Leave a tip</a>
+<a class="btn feedback-link hidden" id="feedbackSummary" href="#">&#x1F4AC; Send feedback</a>
+<a class="btn rate-link hidden" data-rate="up" href="#" title="One click — it opens a pre-written email, just press Send">&#x1F44D; Loved it</a>
+<a class="btn rate-link hidden" data-rate="down" href="#" title="One click — it opens a pre-written email, just press Send">&#x1F44E; Needs work</a>
 </div>
 <button class="btn btn-primary" id="newSession">New Session</button>
 </div>
@@ -965,7 +969,7 @@ Select a level above to see details.
 <div class="card-body" id="historyList"></div>
 </div>
 </div>
-<div class="footer">Soroban Sensei <span id="footerBuild">v6.2.0</span> &mdash; Practice daily for best results. Keyboard: Enter, H, R, S, Arrow keys. <a id="supportFooter" class="support-link hidden" href="#" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none">&#x2764; Support this project</a></div>
+<div class="footer">Soroban Sensei <span id="footerBuild">v6.2.0</span> &mdash; Practice daily for best results. Keyboard: Enter, H, R, S, Arrow keys. <a id="supportFooter" class="support-link hidden" href="#" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none">&#x2764; Support this project</a> <a id="feedbackFooter" class="feedback-link hidden" href="#" style="color:var(--teal);text-decoration:none">&#x1F4AC; Send feedback</a></div>
 <div class="card" style="margin:0 auto 24px;max-width:1200px">
 <div class="card-header" style="background:rgba(0,188,212,.08)">Recommended Daily Routine (25 min) &mdash; use the <span style="color:var(--gold)">Guided Routine</span> button above to auto-run this</div>
 <div class="card-body" style="font-size:.9rem;line-height:1.7;color:var(--ink2)">
@@ -985,7 +989,7 @@ Select a level above to see details.
 </div>
 <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--ring);color:var(--ink3);font-size:.8rem">
 <b style="color:var(--gold)">Why a structured routine matters:</b> Most soroban practice is unstructured &mdash; you sit down and do whatever feels right. This program keeps your daily work consistent: warm up your hands, sharpen bead recognition, train mental visualization, and drill complements in one fixed session. The difficulty adjusts so you stay challenged without guessing what to practice next.
-<br><br><span style="font-size:.75rem;color:var(--ink3)">Disclaimer: This software is provided as-is with no warranty of any kind. No guarantee of compatibility with future browser updates. Your progress is saved only in your browser on your device &mdash; we do not collect, store, or transmit any of your data. Clearing your browser data, or switching browser or device, can reset your progress. Use the Export Progress button to back up your data regularly. Individual training results vary based on consistency and prior experience. This is a practice tool, not a medical or therapeutic device.</span>
+<br><br><span style="font-size:.75rem;color:var(--ink3)">Disclaimer: This software is provided as-is with no warranty of any kind. No guarantee of compatibility with future browser updates. Your practice data is saved only in your browser on your device &mdash; your personal data and results are never collected or transmitted. The website keeps an anonymous, cookie-free count of visits (via GoatCounter) so the developer can see whether it is being used; no personal information is involved. Clearing your browser data, or switching browser or device, can reset your progress. Use the Export Progress button to back up your data regularly. Individual training results vary based on consistency and prior experience. This is a practice tool, not a medical or therapeutic device.</span>
 </div>
 </div>
 </div>
@@ -3396,6 +3400,24 @@ ensureKeypad();
 initSpeech();
 applyPreferences();
 document.querySelectorAll('.support-link').forEach(function(a){if(SUPPORT_URL){a.href=SUPPORT_URL;a.classList.remove('hidden')}});
+// Feedback: email assembled at runtime so address-harvesting bots reading raw HTML don't trivially scrape it
+const FB_USER='suaveriderr',FB_DOMAIN='gmail.com';
+const fbHref='mailto:'+FB_USER+'@'+FB_DOMAIN+'?subject='+encodeURIComponent('Soroban Sensei feedback');
+document.querySelectorAll('.feedback-link').forEach(function(a){a.href=fbHref;a.classList.remove('hidden')});
+// One-click rating: opens a pre-written email the visitor just sends
+document.querySelectorAll('.rate-link').forEach(function(a){
+var up=a.getAttribute('data-rate')==='up';
+a.href='mailto:'+FB_USER+'@'+FB_DOMAIN
++'?subject='+encodeURIComponent(up?'Soroban Sensei rating: 👍 loved it':'Soroban Sensei rating: 👎 needs work')
++'&body='+encodeURIComponent(up?'Just wanted to say I like Soroban Sensei! (Add anything else you want me to know below.)\n\n':'Soroban Sensei could be better. What I would change:\n\n');
+a.classList.remove('hidden');
+});
+// Anonymous, cookie-free visit counting (GoatCounter) — only on the hosted site, never in the offline/double-click copy
+if(location.protocol.indexOf('http')===0&&location.hostname!=='localhost'){
+var gc=document.createElement('script');gc.async=true;gc.src='https://gc.zgo.at/count.js';
+gc.setAttribute('data-goatcounter','https://sorobansensei.goatcounter.com/count');
+document.head.appendChild(gc);
+}
 if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
 renderGuidedStatus();
 renderSaveStatus();
